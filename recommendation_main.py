@@ -69,7 +69,7 @@ class recommendation:
             self.product_id = product_id
 
             predict_obj = PredictFromModel.getPrediction()
-            predict_obj.getPrediction(self.product_id)
+            return predict_obj.getPrediction(self.product_id)
 
             self.log_writer.log("recommendation_main.py: Recommendation task is completed...")
 
@@ -88,4 +88,5 @@ if __name__ == "__main__":
     ## ---------------- Get the recommendation from the Model ------------------------
 
     product_id_fromWeb = 'PRO030'
-    recommend_obj.getProductRecommendation(product_id_fromWeb)
+    lst=recommend_obj.getProductRecommendation(product_id_fromWeb)
+    print(lst)
