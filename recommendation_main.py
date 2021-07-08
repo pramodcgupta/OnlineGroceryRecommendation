@@ -69,9 +69,10 @@ class recommendation:
             self.product_id = product_id
 
             predict_obj = PredictFromModel.getPrediction()
-            return predict_obj.getPrediction(self.product_id)
 
             self.log_writer.log("recommendation_main.py: Recommendation task is completed...")
+
+            return predict_obj.getPrediction(self.product_id)
 
         except Exception as e:
             # Logging Unsuccessful Execution
