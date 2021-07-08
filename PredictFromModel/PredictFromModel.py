@@ -14,6 +14,7 @@
 from ModelCreation import ModelCreation
 import pickle
 from Logger import logger
+import pandas as pd
 
 class getPrediction:
     '''
@@ -57,6 +58,9 @@ class getPrediction:
         try:
             self.log_writer.log("PredictFromModel.py: Product Recommendation (prediction) task  is started...")
 
+            # Read product data into dataframe
+            df_product = pd.read_csv('./RawDataFromDB/Product.csv', usecols=['product_id','product_category_id','product_name','product_price','product_qty','product_image_path'])
+
             ## get User Interaction Matrix
             createmodel_obj = ModelCreation.createModels()
             df_User_product_mat = createmodel_obj.getUserInteractionMatrix()
@@ -68,14 +72,18 @@ class getPrediction:
 
             distances, indices = recommendation_model.kneighbors(df_User_product_mat.iloc[query_index, :].values.reshape(1, -1), n_neighbors=6)
 
+            lst=[]
+
             for i in range(0, len(distances.flatten())):
                 if i == 0:
-                    print('Top 5 Recommendations for {0} are:\n'.format(df_User_product_mat.index[query_index]))
+                    pass
+
                 else:
-                    print('{0}: {1}'.format(i, df_User_product_mat.index[indices.flatten()[i]] #, distances.flatten()[i]
-                                                  ))
+                    lst.append(df_product[df_product.product_id == df_User_product_mat.index[indices.flatten()[i]]].set_index('product_id').to_dict(orient="index"))
 
             self.log_writer.log("PredictFromModel.py: Product Recommendation (prediction) task is completed...")
+
+            return lst
 
         except Exception as e:
             # Logging Unsuccessful Execution
